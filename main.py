@@ -20,19 +20,19 @@ def findObject(image):
 
 x = 470
 y = 300
-width = 30
+width = 45
 height = 38
 
 monitor = {"top": y, "left": x, "width": width, "height": height}
 
-x_diff = 130
-width_diff = 100
+x_diff = 140
+width_diff = 90
 monitor1 = {"top": y, "left": x + x_diff, "width": width + width_diff, "height": height}
 
 start_time = time.time()
 
 ctime = 0
-
+count = 0
 with mss.mss() as sct:
     while True:
         jump = False
@@ -53,11 +53,11 @@ with mss.mss() as sct:
         current_time = int(time.time() - start_time)
         
         if ctime != current_time:
-            
-            if current_time % 10 == 0:
+            if current_time > 10 and current_time % 10 == 0:
                 x += (current_time // 10) * 2
-                x_diff += 5
-                width_diff += 10
+                width += 5
+                width_diff+= 20
+                
                 monitor = {"top": y, "left": x, "width": width, "height": height}
                 monitor1 = {"top": y, "left": x + x_diff, "width": width + width_diff, "height": height}
             ctime = current_time
