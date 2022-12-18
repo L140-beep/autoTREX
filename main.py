@@ -5,37 +5,51 @@ import pyautogui
 import matplotlib.pyplot as plt
 import time
 
-pyautogui.PAUSE = 0.0001
+pyautogui.PAUSE = 0.00001
 
-def findCactus(image):
+def prepareImage(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray,0, 1,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+    return thresh
+    
+def findObject(image):
     if 0 in image:
         return True
     
     return False
 
 x = 470
-y = 317
-width = 100
+y = 330
+width = 140
 height = 1
 
-monitor = {"top": y, "left": x, "width": width, "height": height}
+cactus_monitor = {"top": y, "left": x, "width": width, "height": height}
 
-
+yb = 297
+b_width = 50
+bird_monitor = {"top": yb, "left": x, "width": b_width, "height": height}
 
 
 with mss.mss() as sct:
     while True:
         jump = False
-        image = np.array(sct.grab(monitor=monitor))
+        # bird = False
+        image = np.array(sct.grab(monitor=cactus_monitor))
+        # image_bird = np.array(sct.grab(monitor=bird_monitor))
         
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        _, thresh = cv2.threshold(gray,0, 1,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+        cactus = prepareImage(image) 
+        # image_bird = prepareImage(image_bird)
         
-        part1 = thresh[0][:40]
-        part2 = thresh[0][99:]
+        part1 = cactus[0][:45]
+        part2 = cactus[0][100:]
         
-        if findCactus(part1):
-            pyautogui.press('up')
-            jump = True
-        if findCactus(part2) and jump:
-            pyautogui.press('down')
+        # if findObject(image_bird):
+        #     pyautogui.press('down')
+        #     bird = True
+        if findObject(part1):
+                pyautogui.press('up')
+                jump = True
+                
+        if findObject(part2) and jump:
+                pyautogui.press('down')
